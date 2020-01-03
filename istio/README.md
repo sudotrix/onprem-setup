@@ -39,7 +39,7 @@ Istio is composed of these components:
 
 Istio currently supports Kubernetes and Consul-based environments. 
 
-# Tos set up istion in the new k8s cluster follow bellow steps
+# To set up istion in the new k8s cluster follow bellow steps
 - **Download istio binaries**
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
