@@ -40,7 +40,7 @@ Istio currently supports Kubernetes and Consul-based environments.
 
 
 
-# -> To set up istio in the new k8s cluster follow bellow steps <-
+# To set up istio in the new k8s cluster follow bellow steps 
 - **Download istio binaries**
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
@@ -71,3 +71,15 @@ echo ${INGRESS_PORT}
 http://INGRESS_HOST:INGRESS_PORT/headers
 
 
+# To enable MUTUAL-TLS on your k8s cluster follow bellow instructions
+
+- **Check if there no policies, meshpolicies and destinationrules**
+kubectl get policies.authentication.istio.io --all-namespaces
+kubectl get meshpolicies.authentication.istio.io
+kubectl get destinationrules.networking.istio.io --all-namespaces -o yaml | grep "host:"
+- **To set a mesh-wide authentication policy that enables mutual TLS, submit mesh authentication policy (manifests located uder folder mutual-tls)**
+kubectl apply -f mustual-tls/global-meshpolicy.yml
+- **Create destination rule  from lochal to the istio-system namespace**
+kubectl apply -f mustual-tls/global-destinaitonrule.yml
+- **Create API destionation rule for local cluster**
+kubectl apply -f mustual-tls/api-destinaitonrule.yml
