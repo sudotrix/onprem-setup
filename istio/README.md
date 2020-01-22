@@ -132,5 +132,5 @@ istioctl authn tls-check  'POD-NAME' -n 'NAMESPACE-NAME' 'POD-NAME'.'NAMESPACE-N
 
 - **Check all tls auth**
 
-istioctl authn tls-check  'POD-NAME' -n test-isti
+istioctl authn tls-check  'POD-NAME' -n 'NAMESPACE-NAME'
 
