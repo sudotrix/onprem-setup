@@ -45,7 +45,7 @@ Istio currently supports Kubernetes and Consul-based environments.
 
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
-- **Extract binaries** 
+- **Extract binaries**\n 
 
  tar -xzf istio-1.4.0-linux.tar.gz
 
@@ -68,9 +68,11 @@ istioctl manifest generate > $HOME/generated-manifest.yaml
 - **Then you can deploy your aplication to the labeled namespace, note: you will need to deploy gateway and virtual-service to the same namespace in case your aplication to be accesible externally (find test-example-gtway-vrtsvc-httpbin folder in this repo)**
 
 - **Deploy the test aplication**
-
-kubectl apply -f istio-1.4.0/test/gateway-virtual-svc.yml
-
+kubectl create ns test
+kubectl label namespace oms istio-injection=enabled
+kubectl apply -f samples/httpbin/httpbin.yml -n test
+kubectl apply -f istio-1.4.0/test/gateway-virtual-svc.yml -n test
+curl -I  http://$INGRESS_HOST:$INGRESS_PORT/headers
 - **Set the ingress ports:**
 
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
@@ -79,9 +81,9 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 
 - **Export the worker node IP**
 
-export INGRESS_HOST=<worker-node-IP>
+export INGRESS_HOST='worker-node-IP'
 
-- **To test the aplication run**
+- **To test the aplication try to curl it**
 
 curl -I  http://$INGRESS_HOST:$INGRESS_PORT/headers
 
@@ -91,7 +93,7 @@ echo ${INGRESS_HOST}
 
 echo ${INGRESS_PORT}
 
-- **To access your aplication externally paste bellow information**
+- **To access your aplication externally modify and paste bellow link into your browser**
 
 http://INGRESS_HOST:INGRESS_PORT/headers
 
@@ -117,3 +119,18 @@ kubectl apply -f mustual-tls/global-destinaitonrule.yml
 - **Create API destionation rule for local cluster**
 
 kubectl apply -f mustual-tls/api-destinaitonrule.yml
+
+# After you did above steps you can test and confirm if the aplication accesible over browser or curl it, also you need to check if MUTUAL-TLS is enabled using istioctl tool
+
+-**Describe pod using istioctl**
+
+istioctl x describe pod 'POD-NAME' -n 'NAMESPACE-NAME'
+
+- **Check authn tls**
+
+istioctl authn tls-check  'POD-NAME' -n 'NAMESPACE-NAME' 'POD-NAME'.'NAMESPACE-NAME'.svc.cluster.local
+
+- **Check all tls auth**
+
+istioctl authn tls-check  'POD-NAME' -n test-isti
+
