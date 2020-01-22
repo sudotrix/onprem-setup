@@ -74,9 +74,13 @@ http://INGRESS_HOST:INGRESS_PORT/headers
 # To enable MUTUAL-TLS on your k8s cluster follow bellow instructions
 
 - **Check if there no policies, meshpolicies and destinationrules**
+
 kubectl get policies.authentication.istio.io --all-namespaces
+
 kubectl get meshpolicies.authentication.istio.io
+
 kubectl get destinationrules.networking.istio.io --all-namespaces -o yaml | grep "host:"
+
 - **To set a mesh-wide authentication policy that enables mutual TLS, submit mesh authentication policy (manifests located uder folder mutual-tls)**
 kubectl apply -f mustual-tls/global-meshpolicy.yml
 - **Create destination rule  from lochal to the istio-system namespace**
