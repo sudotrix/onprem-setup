@@ -4,7 +4,6 @@ An open platform to connect, manage, and secure microservices.
 - For in-depth information about how to use Istio, visit [istio.io](https://istio.io)
 
 
-
 ## Introduction
 
 Istio is an open platform for providing a uniform way to integrate
@@ -39,7 +38,9 @@ Istio is composed of these components:
 
 Istio currently supports Kubernetes and Consul-based environments. 
 
-# To set up istion in the new k8s cluster follow bellow steps
+
+
+# -->> To set up istio in the new k8s cluster follow bellow steps <<--
 - **Download istio binaries**
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
@@ -53,9 +54,9 @@ istioctl manifest apply -   run this to install istio
 istioctl manifest generate > $HOME/generated-manifest.yaml
 -**Once this installed in case your pod to be able to take effect for sidecar container you need to label the namespaces related to that po**
  kubectl label namespace <namespace-name> istio-injection=enabled
-- **Then you can deploy your aplication to the labeled namespace, note: you will need to deploy gateway and virtual-service to the same namespace in case your aplication to be accesible externally (find test folder in this repo)**
+- **Then you can deploy your aplication to the labeled namespace, note: you will need to deploy gateway and virtual-service to the same namespace in case your aplication to be accesible externally (find test-example-gtway-vrtsvc-httpbin folder in this repo)**
 - **Deploy the test aplication**
-kubectl apply -f istio-1.4.0/test/gateway.yml
+kubectl apply -f istio-1.4.0/test/gateway-virtual-svc.yml
 - **Set the ingress ports:**
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
