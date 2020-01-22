@@ -40,7 +40,7 @@ Istio currently supports Kubernetes and Consul-based environments.
 
 
 
-# -->> To set up istio in the new k8s cluster follow bellow steps <<--
+# -> To set up istio in the new k8s cluster follow bellow steps <-
 - **Download istio binaries**
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
