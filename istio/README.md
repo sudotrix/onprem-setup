@@ -42,32 +42,57 @@ Istio currently supports Kubernetes and Consul-based environments.
 
 # To set up istio in the new k8s cluster follow bellow steps 
 - **Download istio binaries**
+
 wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.tar.gz
 
 - **Extract binaries** 
+
  tar -xzf istio-1.4.0-linux.tar.gz
+
 - **You have to instal istioctl command on local before running next step**
+
  cp bin/istioctl /usr/local/bin/
+
 - **Run bellow command to install default istio by istioctl command** 
+
 istioctl manifest apply -   run this to install istio
+
 - **If you want to generate istio manifest file in case to review it or modify, run below command**
+
 istioctl manifest generate > $HOME/generated-manifest.yaml
+
 -**Once this installed in case your pod to be able to take effect for sidecar container you need to label the namespaces related to that po**
+
  kubectl label namespace <namespace-name> istio-injection=enabled
+
 - **Then you can deploy your aplication to the labeled namespace, note: you will need to deploy gateway and virtual-service to the same namespace in case your aplication to be accesible externally (find test-example-gtway-vrtsvc-httpbin folder in this repo)**
+
 - **Deploy the test aplication**
+
 kubectl apply -f istio-1.4.0/test/gateway-virtual-svc.yml
+
 - **Set the ingress ports:**
+
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+
 - **Export the worker node IP**
+
 export INGRESS_HOST=<worker-node-IP>
+
 - **To test the aplication run**
+
 curl -I  http://$INGRESS_HOST:$INGRESS_PORT/headers
+
 - **Also you can check port and host which you created as a variable**
+
 echo ${INGRESS_HOST}
+
 echo ${INGRESS_PORT}
+
 - **To access your aplication externally paste bellow information**
+
 http://INGRESS_HOST:INGRESS_PORT/headers
 
 
@@ -82,8 +107,13 @@ kubectl get meshpolicies.authentication.istio.io
 kubectl get destinationrules.networking.istio.io --all-namespaces -o yaml | grep "host:"
 
 - **To set a mesh-wide authentication policy that enables mutual TLS, submit mesh authentication policy (manifests located uder folder mutual-tls)**
+
 kubectl apply -f mustual-tls/global-meshpolicy.yml
+
 - **Create destination rule  from lochal to the istio-system namespace**
+
 kubectl apply -f mustual-tls/global-destinaitonrule.yml
+
 - **Create API destionation rule for local cluster**
+
 kubectl apply -f mustual-tls/api-destinaitonrule.yml
