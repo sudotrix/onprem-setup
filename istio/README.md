@@ -68,6 +68,7 @@ istioctl manifest generate > $HOME/generated-manifest.yaml
 - **Then you can deploy your aplication to the labeled namespace, note: you will need to deploy gateway and virtual-service to the same namespace in case your aplication to be accesible externally (find test-example-gtway-vrtsvc-httpbin folder in this repo)**
 
 - **Deploy the test aplication**\n
+
 kubectl create ns test
 kubectl label namespace oms istio-injection=enabled
 kubectl apply -f samples/httpbin/httpbin.yaml -n test
