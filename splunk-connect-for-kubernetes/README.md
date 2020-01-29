@@ -1,3 +1,20 @@
+# Connect splunk to kubernetes logging per namespace
+Proper folder for helm charts:
+cd /root/splunk-connect/splunk-connect-for-kubernetes
+
+Note: there will be Makefile which helps to create new chart based on all 4 folders with charts under <helm-chart> folder.
+To make a chart use the command: 
+
+helm install --name=splunk-connect -f values.yaml /root/splunk-connect/splunk-connect-for-kubernetes/build/splunk-connect-for-kubernetes-1.3.0.tgz --namespace=splunk-connect
+
+The main values.yaml file is:
+Modify this file in case to add hec token and indexes: 
+
+/root/splunk-connect/splunk-connect-for-kubernetes/helm-chart/splunk-connect-for-kubernetes/values.yaml
+
+In case to be able to get logs pier namespace, create a hec token in the splunk and indexes under this token.
+Indexes should have the same name as a namespaces, that way splunk will check if the namespace compatible with the index and  will forward the logs form the pods sorted by the namespace.
+
 # What does Splunk Connect for Kubernetes do?
 
 Splunk Connect for Kubernetes provides a way to import and search your Kubernetes logging, object, and metrics data in Splunk. Now, Splunk Connect for Kubenetes also supports [importing and searching your container logs on AWS ECS and AWS Fargate using firelens.](https://github.com/splunk/splunk-connect-for-kubernetes/tree/develop/firelens) Splunk is a proud contributor to Cloud Native Computing Foundation (CNCF) and Splunk Connect for Kubernetes utilizes and supports multiple CNCF components in the development of these tools to get data into Splunk.
