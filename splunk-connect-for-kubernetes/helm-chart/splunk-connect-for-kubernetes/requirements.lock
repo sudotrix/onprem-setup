@@ -1,0 +1,12 @@
+dependencies:
+- name: splunk-kubernetes-logging
+  repository: file://../splunk-kubernetes-logging
+  version: 1.3.0
+- name: splunk-kubernetes-objects
+  repository: file://../splunk-kubernetes-objects
+  version: 1.3.0
+- name: splunk-kubernetes-metrics
+  repository: file://../splunk-kubernetes-metrics
+  version: 1.3.0
+digest: sha256:ed621774324510a91b37178e583ccfa285ade9dcd445900f7317434ba0d45540
+generated: 2020-01-20T12:13:42.6080196-05:00
