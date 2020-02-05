@@ -26,8 +26,12 @@ spec:
   - match:
     - uri:
         prefix: /ocidev/
+    rewrite:
+      uri: /
     route:
     - destination:
         port:
           number: 8080
         host: order-cart-integration
+
+#use this endpoint to test it /ocidev/management/env

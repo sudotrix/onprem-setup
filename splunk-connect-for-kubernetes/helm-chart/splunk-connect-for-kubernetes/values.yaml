@@ -66,13 +66,6 @@ splunk-kubernetes-logging:
     create: true  
   splunk:
     hec:
-      #token: 60f70eed-c914-40c3-906d-72caa0849116 
-      #host: lxspisnetqas001
-      #port: 8088
-      #insecureSSL: true
-      #protocol: http
-      #indexName: oms_app
-      #eor-dev
       token: 7dcde8aa-9b9f-4158-b1fd-0962204a029f
       host: lxspfmgrqas001
       port: 8088
@@ -81,42 +74,6 @@ splunk-kubernetes-logging:
       indexRouting: true
       indexRoutingDefaultIndex:
       #indexName: oms
-      #oas-dev
-    hec:
-      token: 4c2163ef-cc4e-427b-9c67-32154cc4db4a
-      host: lxspfmgrqas001
-      port: 8088
-      insecureSSL: true
-      protocol: https
-      indexRouting: true
-      indexRoutingDefaultIndex:
-      #oci-dev
-    hec:
-      token: 11e279c5-bcf5-4adb-9cb5-79140dda1032
-      host: lxspfmgrqas001
-      port: 8088
-      insecureSSL: true
-      protocol: https
-      indexRouting: true
-      indexRoutingDefaultIndex:
-      #sos-dev
-    hec:
-      token: e81dae28-9f7a-41db-a1d6-6758984245a2
-      host: lxspfmgrqas001
-      port: 8088
-      insecureSSL: true
-      protocol: https
-      indexRouting: true
-      indexRoutingDefaultIndex:
-      #son-dev
-    hec:
-      token: 44b7992a-80a7-49f7-a7c5-77b6d747868c
-      host: lxspfmgrqas001
-      port: 8088
-      insecureSSL: true
-      protocol: https
-      indexRouting: true
-      indexRoutingDefaultIndex:
 splunk-kubernetes-metrics:
   rbac:
     create: true
