@@ -1,0 +1,31 @@
+# ## Configure 'ip' variable to bind kubernetes services on a
+# ## different ip than the default iface
+# ## We should set etcd_member_name for etcd cluster. The node that is not a etcd member do not need to set the value, or can set the empty string value.
+[all]
+lxomsmstprf001 ansible_host=172.29.194.157   ip=172.29.194.157 etcd_member_name=etcd1
+lxomsmstprf002 ansible_host=172.29.194.158   ip=172.29.194.158 etcd_member_name=etcd2
+lxomsmstprf003 ansible_host=172.29.194.159   ip=172.29.194.159 etcd_member_name=etcd3
+lxomsnodprf001 ansible_host=172.29.194.233   ip=172.29.194.233 etcd_member_name=etcd4
+lxomsnodprf002 ansible_host=172.29.194.234   ip=172.29.194.234 etcd_member_name=etcd5
+lxomsnodprf003 ansible_host=172.29.194.235   ip=172.29.194.235 etcd_member_name=etcd6
+lxomsnodprf004 ansible_host=172.29.194.236   ip=172.29.194.236 etcd_member_name=etcd7
+
+# ## configure a bastion host if your nodes are not directly reachable
+# bastion ansible_host=x.x.x.x ansible_user=some_user
+
+[kube-master]
+lxomsmstprf001
+lxomsmstprf002
+lxomsmstprf003
+[etcd]
+lxomsmstprf001
+lxomsmstprf002
+lxomsmstprf003
+[kube-node]
+lxomsnodprf001
+lxomsnodprf002
+lxomsnodprf003
+lxomsnodprf004
+[k8s-cluster:children]
+kube-master
+kube-node
