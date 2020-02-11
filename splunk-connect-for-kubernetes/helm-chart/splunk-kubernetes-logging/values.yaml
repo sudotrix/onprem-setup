@@ -91,7 +91,7 @@ splunk:
     port: 8088
     # token is required and should be provided by user
     # This was changed token: 4a7a04c9-3dbf-4076-8124-5e7af158eb40
-    token: 7dcde8aa-9b9f-4158-b1fd-0962204a029f
+    token: 3bd90de9-3635-45b0-a8d8-f7dabc78fa90
     # protocol has two options: "http" and "https", default is "https"
     protocol: http
     # indexName tells which index to use, this is optional. If it's not present, will use the default one configured in HEC.
