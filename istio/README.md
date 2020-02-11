@@ -55,7 +55,7 @@ wget https://github.com/istio/istio/releases/download/1.4.0/istio-1.4.0-linux.ta
 
 - **Run bellow command to install default istio by istioctl command** 
 
-istioctl manifest apply -   run this to install istio
+istioctl manifest apply --set values.tracing.enabled=true  -   run this to install istio
 
 - **If you want to generate istio manifest file in case to review it or modify, run below command**
 
