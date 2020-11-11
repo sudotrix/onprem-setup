@@ -1,0 +1,76 @@
+# Default values for service_template.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+service_name: api-web
+#namespace: api-web
+replicas: 1
+
+has_opa: false
+has_metrics: false
+has_rbac: false
+nginx_container: false
+has_secrets: false
+
+containers:
+- name: splash-nginx
+  image: nginx
+  image_tag: latest
+  pull_policy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+updates:
+  max_unavailable: 1
+  max_surge: 1
+
+scaling:
+  min: 1
+  max: 10
+  # cpu_threshhold: 500m
+  # memory_threshhold: 500Mi
+  cpu_threshhold: 60
+  memory_threshhold: 60
+
+service:
+  main_port: ""
+  private: true
+
+
+#Deployment
+env: dev
+nodeSelector:
+  infra: specific
+tolerations:
+- key: "infra"
+  operator: "Equal"
+  value: "argocd"
+  effect: "NoSchedule"
+
+## Certificate configuration
+certificate:
+  enabled: true
+  domain: api.splashthat.eu
+  issuer_name: letsencrypt-prod
+  additionalHosts: []
+
+ingress:
+  service_port: 80
+  domain: api.splashthat.eu
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  labels: {}
+  hosts:
+  - api.splashthat.eu
+  paths: /
+  extraPaths:
+    []
+  tls:
+    hosts:
+    - api.splashthat.eu

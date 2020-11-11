@@ -1,0 +1,25 @@
+{{- $domain := .Values.ingress.domain -}}
+{{- $paths := .Values.ingress.paths -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Values.service_name }}
+{{- if .Values.ingress.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+spec:
+  tls:
+  - hosts:
+    - {{ $domain }}
+    secretName: {{ .Values.service_name }}-{{ "certificate" }}-{{ "secret" }}
+  rules:
+  - host: {{ $domain }}
+    http:
+      paths:
+      - path: {{ $paths }}
+        backend:
+          serviceName: {{ .Values.service_name }}
+          servicePort: {{ .Values.ingress.service_port }}

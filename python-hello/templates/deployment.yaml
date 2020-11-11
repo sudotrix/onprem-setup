@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service_name }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.service_name }}
+    env: {{ .Values.env }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.service_name }}
+  strategy:
+    rollingUpdate:
+      maxUnavailable: {{ .Values.updates.max_unavailable | default "1" }}
+      maxSurge: {{ .Values.updates.max_surge | default "1" }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service_name }}
+        env: {{ .Values.env }}
+      annotations:
+        prometheus.io/scrape: "{{ .Values.has_metrics }}"
+    spec:
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      serviceAccountName: {{ .Values.service_name }}
+      containers:
+      {{- $service_name := .Values.service_name -}}
+      {{- $namespace := .Values.namespace -}}
+      {{- $consul_token := .Values.consul_token -}}
+      {{- range .Values.containers }}
+      - name: {{ .name }}
+        image: {{ .image }}:{{ .image_tag | default "latest" }}
+        imagePullPolicy: {{ .pull_policy | default "Always" }}
+        envFrom:
+        - secretRef:
+            name: {{ $service_name }}-{{ .name }}
+        {{- if .probes }}
+        livenessProbe: {{ toJson .probes.liveness }}
+        readinessProbe: {{ toJson .probes.readiness }}
+        {{- end }}
+        {{- if .port }}
+        ports:
+        - containerPort: {{ .port }}
+          protocol: TCP
+        {{- end }}
+      {{- end }}
+      {{- if .Values.nginx_container }}
+      - name: nginx
+        image: "nginx:1.17.9-alpine"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - mountPath: "/etc/nginx/conf.d/"
+          name: nginx-conf
+          readOnly: true
+      {{- if .Values.has_opa }}
+      - name: opa
+        image: "openpolicyagent/opa:0.17.3"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8181
+          protocol: TCP
+        - containerPort: 443
+          protocol: TCP
+        - containerPort: 80
+          protocol: TCP
+        args:
+        - run
+        - -s
+        - -c
+        - /config/config.yml
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          value: {{ .Values.opa_aws_credentials.key }}
+        - name: AWS_SECRET_ACCESS_KEY
+          value: {{ .Values.opa_aws_credentials.secret }}
+        - name: AWS_REGION
+          value: us-east-1
+        volumeMounts:
+        - mountPath: "/config"
+          name: opa-config
+      {{- end }}
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf
+      - name: opa-config
+        configMap:
+          name: opa-config
+{{- end }}
