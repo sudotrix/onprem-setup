@@ -1,0 +1,24 @@
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+  name: {{ .Values.service_name }}
+  namespace: {{ .Values.service_name }}
+  labels: 
+    app: {{ .Values.service_name }}
+spec:
+  maxReplicas: {{ .Values.scaling.max }}
+  minReplicas: {{ .Values.scaling.in }}
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ .Values.service_name }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: {{ .Values.scaling.cpu_threshhold }}
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: {{ .Values.scaling.memory_threshhold }} 

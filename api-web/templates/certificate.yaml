@@ -1,0 +1,17 @@
+{{- if .Values.certificate.enabled -}}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.service_name }}-{{ "certificate" }}
+spec:
+  secretName: {{ .Values.service_name }}-{{ "certificate" }}-{{ "secret" }}
+  commonName: {{ .Values.certificate.domain | quote }}
+  dnsNames:
+    - {{ .Values.certificate.domain | quote }}
+  {{- range .Values.certificate.additionalHosts }}
+    - {{ . | quote }}
+  {{- end }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: {{ .Values.certificate.issuer_name | quote }}
+{{- end }}
