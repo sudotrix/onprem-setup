@@ -1,0 +1,34 @@
+#!/usr/bin/env groovy
+
+import groovy.json.JsonSlurper
+pipeline {
+    agent none
+    stages {
+       stage('Carbon-for-Stores - Admin Image Docker build') {
+            agent { label 'docker' }
+            environment {
+                    IMAGE_TAG = "${env.BUILD_ID}_${BRANCH_NAME}"
+                    repository = 'e-gen-docker-local.docker.lowes.com/carbon-for-stores-admin-image'
+                    JFROG_CREDENTIALS = credentials('CARBON_STORES_JFROG_CREDENTIALS')
+            }
+            steps {
+                script {
+                    sh '''
+                    docker login -u carbon_stores_jfrog -p "${JFROG_CREDENTIALS}" ${repository}
+                    docker build . -t ${repository}:${IMAGE_TAG}
+                    GOSS_RESULT=$(docker run --entrypoint=./goss_test.sh ${repository}:${IMAGE_TAG})
+                    GOSS_FAIL_COUNT=$(echo $GOSS_RESULT | cut --delimiter=, -f2 | awk '{print $2}')
+                    if [ $GOSS_FAIL_COUNT = 0 ];then
+                        echo "###Pushing image to GCR###"
+                        docker push ${repository}:${IMAGE_TAG}
+                    else
+                        echo "###Goss test failed###"
+                        echo "Exiting....."
+                        exit 1
+                    fi
+                    '''
+                }
+            }
+       }
+    }
+}
